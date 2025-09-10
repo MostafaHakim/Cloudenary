@@ -16,7 +16,7 @@ export default function UploadImage() {
 
     try {
       const res = await fetch(
-        "cloudinary://983431191483856:EmsEH72WH7JMsRRYGuNJ7ge_zpQ@dxyn1uoui//image/upload",
+        "https://api.cloudinary.com/v1_1/dxyn1uoui/image/upload", // ✅ তোমার cloud_name
         {
           method: "POST",
           body: formData,
@@ -24,34 +24,22 @@ export default function UploadImage() {
       );
 
       const data = await res.json();
-      setImageUrl(data.secure_url); // uploaded image URL
-      setLoading(false);
+      console.log("Cloudinary response:", data);
+      setImageUrl(data.secure_url); // ✅ Uploaded image URL
     } catch (err) {
       console.error("Upload failed:", err);
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 flex flex-col gap-3">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setFile(e.target.files[0])}
-      />
-      <button
-        onClick={handleUpload}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-      >
+    <div>
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+      <button onClick={handleUpload}>
         {loading ? "Uploading..." : "Upload"}
       </button>
-
-      {imageUrl && (
-        <div>
-          <p>Uploaded Image:</p>
-          <img src={imageUrl} alt="Uploaded" className="w-40 mt-2 rounded" />
-        </div>
-      )}
+      {imageUrl && <img src={imageUrl} alt="Uploaded" />}
     </div>
   );
 }
